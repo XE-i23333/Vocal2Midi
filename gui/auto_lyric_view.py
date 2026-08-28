@@ -137,6 +137,14 @@ class AutoLyricInterface(ScrollArea):
         self.cb_ustx.checkedChanged.connect(self.on_ustx_changed)
         combo_row2.addWidget(self.cb_ustx)
 
+        combo_row2.addSpacing(20)
+        combo_row2.addWidget(BodyLabel("导出 VSQX", self))
+        self.cb_vsqx = SwitchButton("On", self, self)
+        self.cb_vsqx.setOffText("Off")
+        self.cb_vsqx.setChecked(self.global_settings.settings.value("debug_vsqx", False, type=bool))
+        self.cb_vsqx.checkedChanged.connect(lambda v: self.global_settings.settings.setValue("debug_vsqx", v))
+        combo_row2.addWidget(self.cb_vsqx)
+
         combo_row2.addSpacing(28)
         self.pitch_curve_label = BodyLabel("输出音高曲线", self)
         combo_row2.addWidget(self.pitch_curve_label)
@@ -324,6 +332,8 @@ class AutoLyricInterface(ScrollArea):
             output_formats.append("chunks")
         if self.cb_ustx.isChecked():
             output_formats.append("ustx")
+        if self.cb_vsqx.isChecked():
+            output_formats.append("vsqx")
 
         save_dir = self.save_dir_edit.text()
         if not save_dir:
