@@ -24,6 +24,7 @@ from inference.API.hfa_api import load_hfa_model, run_hubert_fa, export_hfa_arti
 from inference.API.game_api import load_game_model, extract_pitches_and_align_torch, extract_pitches_only_torch
 from inference.API.rmvpe_api import RmvpeTranscriber
 from inference.API.ustx_api import save_ustx
+from inference.API.vsqx_api import save_vsqx
 from inference.device_utils import (
     RUNTIME_DEVICE_CHOICES,
     default_runtime_device,
@@ -127,7 +128,7 @@ def run_qwen_asr_and_fa(
         asr_model_path=asr_model_path,
         device=device,
         force_subprocess=True,
-        asr_timeout_sec=180,
+        asr_timeout_sec=600,
     )
     return process_asr_to_phonemes(
         all_results,
@@ -457,6 +458,8 @@ def auto_lyric_hybrid_pipeline(
         _save_text(all_notes, output_dir / f"{output_key}.csv", "csv", pitch_format, round_pitch)
     if "ustx" in output_format_set:
         save_ustx(all_notes, output_dir / f"{output_key}.ustx", tempo=float(tempo), rmvpe_result=rmvpe_result)
+    if "vsqx" in output_format_set:
+        save_vsqx(all_notes, output_dir / f"{output_key}.vsqx", tempo=float(tempo), language=language)
 
 
 if __name__ == "__main__":
