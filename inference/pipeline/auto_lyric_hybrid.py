@@ -128,7 +128,7 @@ def run_qwen_asr_and_fa(
         asr_model_path=asr_model_path,
         device=device,
         force_subprocess=True,
-        asr_timeout_sec=600,
+        asr_timeout_sec=180,
     )
     return process_asr_to_phonemes(
         all_results,
@@ -231,7 +231,7 @@ def auto_lyric_hybrid_pipeline(
     _check_cancel()
 
     rmvpe_result = None
-    if "ustx" in output_format_set and output_pitch_curve:
+    if ("ustx" in output_format_set or "vsqx" in output_format_set) and output_pitch_curve:
         rmvpe_model = _resolve_rmvpe_path(rmvpe_model_path)
         print(f"[Hybrid Pipeline] Running RMVPE from: {rmvpe_model}")
         rmvpe = RmvpeTranscriber(rmvpe_model, device=device)
@@ -459,7 +459,7 @@ def auto_lyric_hybrid_pipeline(
     if "ustx" in output_format_set:
         save_ustx(all_notes, output_dir / f"{output_key}.ustx", tempo=float(tempo), rmvpe_result=rmvpe_result)
     if "vsqx" in output_format_set:
-        save_vsqx(all_notes, output_dir / f"{output_key}.vsqx", tempo=float(tempo), language=language)
+        save_vsqx(all_notes, output_dir / f"{output_key}.vsqx", tempo=float(tempo), language=language, rmvpe_result=rmvpe_result)
 
 
 if __name__ == "__main__":
